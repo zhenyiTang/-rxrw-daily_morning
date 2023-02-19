@@ -8,14 +8,12 @@ import random
 import pytz
 
 # Set the timezone to New York
-ny_tz = pytz.timezone('America/New_York')
-
-# Get the current time in New York
-ny_time = datetime.datetime.now(ny_tz)
-today = ny_time.strftime('%Y-%m-%d %H:%M)
-# nowtime = datetime.utcnow() + timedelta(hours=8)  # Eastern time
-# today = datetime.strptime(str(nowtime.date()), "%Y-%m-%d") #今天的日期
-# today = datetime.now()
+# ny_tz = pytz.timezone('America/New_York')
+# ny_time = datetime.datetime.now(ny_tz)
+# today = ny_time.strftime('%Y-%m-%d %H:%M)
+nowtime = datetime.utcnow() - timedelta(hours=5)  # New york time
+today = datetime.strptime(str(nowtime.date()), "%Y-%m-%d") #今天的日期
+today = datetime.now()
 
 start_date = os.environ['START_DATE']
 # city = os.environ['CITY']
