@@ -6,7 +6,10 @@ import requests
 import os
 import random
 
-today = datetime.now()
+nowtime = datetime.utcnow() + timedelta(hours=8)  # 东八区时间
+today = datetime.strptime(str(nowtime.date()), "%Y-%m-%d") #今天的日期
+# today = datetime.now()
+
 start_date = os.environ['START_DATE']
 # city = os.environ['CITY']
 birthday = os.environ['BIRTHDAY']
@@ -14,7 +17,7 @@ birthday = os.environ['BIRTHDAY']
 app_id = os.environ["APP_ID"]
 app_secret = os.environ["APP_SECRET"]
 
-user_id = os.environ["USER_ID"]
+user_ids = os.getenv('USER_ID', '').split("\n")
 template_id = os.environ["TEMPLATE_ID"]
 
 
@@ -24,7 +27,12 @@ template_id = os.environ["TEMPLATE_ID"]
 #   weather = res['data']['list'][0]
 #   return weather['weather'], math.floor(weather['temp'])
 
-def get_count():
+def get_week_day():
+  week_list = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"]
+  week_day = week_list[datetime.date(today).weekday()]
+  return week_day
+  
+def get_anniversary_day_count():
   delta = today - datetime.strptime(start_date, "%Y-%m-%d")
   return delta.days
 
@@ -47,8 +55,27 @@ def get_random_color():
 client = WeChatClient(app_id, app_secret)
 
 wm = WeChatMessage(client)
-# wea, temperature = get_weather()
+wea, temperature = get_weather()
 # data = {"weather":{"value":wea},"temperature":{"value":temperature},"love_days":{"value":get_count()},"birthday_left":{"value":get_birthday()},"words":{"value":get_words(), "color":get_random_color()}}
-data = {"love_days":{"value":get_count()},"birthday_left":{"value":get_birthday()},"words":{"value":get_words(), "color":get_random_color()}}
-res = wm.send_template(user_id, template_id, data)
-print(res)
+data = {
+  "weather":{"value":wea},
+  "temperature":{"value":temperature},
+  "love_days":{"value":get_anniversary_day_count()},
+  "birthday_left":{"value":get_birthday()},
+  "words":{"value":get_words(), "color":get_random_color()}
+}
+
+# res = wm.send_template(user_id, template_id, data)
+# print(res)
+
+if __name__ == '__main__':
+  count = 0
+  try:
+    for user_id in user_ids:
+      res = wm.send_template(user_id, template_id, data)
+      count+=1
+  except WeChatClientException as e:
+    print('微信端返回错误：%s。错误代码：%d' % (e.errmsg, e.errcode))
+    exit(502)
+
+  print("发送了" + str(count) + "条消息")
