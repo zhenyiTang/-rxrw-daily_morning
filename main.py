@@ -5,7 +5,7 @@ from wechatpy.client.api import WeChatMessage, WeChatTemplate
 import requests
 import os
 import random
-import pytz
+# import pytz
 
 # Set the timezone to New York
 # ny_tz = pytz.timezone('America/New_York')
