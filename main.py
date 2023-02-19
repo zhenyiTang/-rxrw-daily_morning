@@ -13,9 +13,8 @@ import random
 # today = ny_time.strftime('%Y-%m-%d %H:%M)
 
 # nowtime = datetime.utcnow() - timedelta(hours=5)  # New york time
-nowtime = datetime.now()
+nowtime = datetime.utcnow() - timedelta(hours=5)
 today = datetime.strptime(str(nowtime.date()), "%Y-%m-%d") #今天的日期
-today = datetime.now()
 
 start_date = os.environ['START_DATE']
 # city = os.environ['CITY']
