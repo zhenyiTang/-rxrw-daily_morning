@@ -5,9 +5,16 @@ from wechatpy.client.api import WeChatMessage, WeChatTemplate
 import requests
 import os
 import random
+import pytz
 
-nowtime = datetime.utcnow() + timedelta(hours=8)  # 东八区时间
-today = datetime.strptime(str(nowtime.date()), "%Y-%m-%d") #今天的日期
+# Set the timezone to New York
+ny_tz = pytz.timezone('America/New_York')
+
+# Get the current time in New York
+ny_time = datetime.datetime.now(ny_tz)
+today = ny_time.strftime('%Y-%m-%d %H:%M)
+# nowtime = datetime.utcnow() + timedelta(hours=8)  # Eastern time
+# today = datetime.strptime(str(nowtime.date()), "%Y-%m-%d") #今天的日期
 # today = datetime.now()
 
 start_date = os.environ['START_DATE']
@@ -58,8 +65,8 @@ wm = WeChatMessage(client)
 wea, temperature = get_weather()
 # data = {"weather":{"value":wea},"temperature":{"value":temperature},"love_days":{"value":get_count()},"birthday_left":{"value":get_birthday()},"words":{"value":get_words(), "color":get_random_color()}}
 data = {
-  "weather":{"value":wea},
-  "temperature":{"value":temperature},
+  "date": {"value": today.strftime('%Y年%m月%d日')},
+  "week_day": {"value": get_week_day()},
   "love_days":{"value":get_anniversary_day_count()},
   "birthday_left":{"value":get_birthday()},
   "words":{"value":get_words(), "color":get_random_color()}
