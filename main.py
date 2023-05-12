@@ -48,6 +48,9 @@ def get_birthday():
     next = next.replace(year=next.year + 1)
   return (next - today).days
 
+def split_message(message, limit):
+    return [message[i:i+limit] for i in range(0, len(message), limit)]
+  
 def get_sweet_words():
   words = requests.get("https://api.shadiao.pro/chp")
   return words.json()['data']['text']
@@ -69,14 +72,29 @@ client = WeChatClient(app_id, app_secret)
 wm = WeChatMessage(client)
 # wea, temperature = get_weather()
 # data = {"weather":{"value":wea},"temperature":{"value":temperature},"love_days":{"value":get_count()},"birthday_left":{"value":get_birthday()},"words":{"value":get_words(), "color":get_random_color()}}
+# Start by initializing the base dictionary
 data = {
   "date": {"value": today.strftime('%Y年%m月%d日')},
   "week_day": {"value": get_week_day()},
   "love_days":{"value": get_anniversary_day_count()},
   "birthday_left":{"value": get_birthday()},
-  "sweet_words":{"value": get_sweet_words()},
-  "wit_words":{"value": get_wit_words()}
 }
+
+# Define a maximum character limit for each field
+character_limit = 20
+
+# Split the 'sweet_words' and 'wit_words' values into multiple parts
+sweet_words_parts = split_message(get_sweet_words(), character_limit)
+wit_words_parts = split_message(get_wit_words(), character_limit)
+
+# Add each part to the dictionary as a separate field
+for i, part in enumerate(sweet_words_parts):
+    field_name = f"sweet_words_{i+1}"
+    data[field_name] = {"value": part}
+
+for i, part in enumerate(wit_words_parts):
+    field_name = f"wit_words_{i+1}"
+    data[field_name] = {"value": part}
 
 # res = wm.send_template(user_id, template_id, data)
 # print(res)
