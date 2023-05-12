@@ -54,6 +54,7 @@ def get_words():
   #     return get_words()
   #   return words.json()['data']['text']
   words = requests.get("https://api.shadiao.pro/chp")
+  print(words.json())
   return words.json()
 
 def get_random_color():
