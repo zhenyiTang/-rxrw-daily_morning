@@ -82,6 +82,7 @@ if __name__ == '__main__':
   try:
     for user_id in user_ids:
       res = wm.send_template(user_id, template_id, data)
+      print(data)
       count+=1
   except WeChatClientException as e:
     print('微信端返回错误：%s。错误代码：%d' % (e.errmsg, e.errcode))
