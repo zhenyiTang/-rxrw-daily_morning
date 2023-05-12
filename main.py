@@ -1,3 +1,5 @@
+import asyncio
+import aiohttp
 from datetime import date, datetime, timedelta
 import math
 import os
@@ -34,15 +36,19 @@ def get_birthday():
         next = next.replace(year=next.year + 1)
     return (next - today).days
 
-def get_sweet_words():
-    words = requests.get("https://api.shadiao.pro/chp")
-    return words.json()['data']['text']
+async def get_sweet_words():
+    async with aiohttp.ClientSession() as session:
+        async with session.get('https://api.shadiao.pro/chp') as resp:
+            words = await resp.json()
+            return words['data']['text']
 
-def get_wit_words():
-    words = requests.get("https://api.shadiao.pro/du")
-    return words.json()['data']['text']
+async def get_wit_words():
+    async with aiohttp.ClientSession() as session:
+        async with session.get('https://api.shadiao.pro/du') as resp:
+            words = await resp.json()
+            return words['data']['text']
 
-def send_multiple_messages(message_parts, field_name):
+async def send_multiple_messages(message_parts, field_name):
     for i, part in enumerate(message_parts):
         data = {
             "date": {"value": today.strftime('%Y年%m月%d日')},
@@ -61,8 +67,17 @@ if __name__ == '__main__':
 
     character_limit = 20
 
-    sweet_words_parts = split_message(get_sweet_words(), character_limit)
-    send_multiple_messages(sweet_words_parts, "sweet_words")
+    loop = asyncio.get_event_loop()
 
-    wit_words_parts = split_message(get_wit_words(), character_limit)
-    send_multiple_messages(wit_words_parts, "wit_words")
+    sweet_words_parts = loop.run_until_complete(get_sweet_words())
+    sweet_words_parts = split_message(sweet_words_parts, character_limit)
+
+    wit_words_parts = loop.run_until_complete(get_wit_words())
+    wit_words_parts = split_message(wit_words_parts, character_limit)
+
+    tasks = [
+        send_multiple_messages(sweet_words_parts, "sweet_words"),
+        send_multiple_messages(wit_words_parts, "wit_words")
+    ]
+
+    loop.run_until_complete(asyncio.gather(*tasks))
