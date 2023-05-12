@@ -53,12 +53,11 @@ def get_sweet_words():
   return words.json()['data']['text']
 
 def get_wit_words():
-  #   words = requests.get("https://du.shadiao.pro")
+  #   words = requests.get("https://api.shadiao.pro/du")
   #   if words.status_code != 200:
   #     return get_words()
   #   return words.json()['data']['text']
   words = requests.get("https://du.shadiao.pro")
-  print(words.json)
   return words.json()['data']['text']
 
 def get_random_color():
@@ -73,10 +72,10 @@ wm = WeChatMessage(client)
 data = {
   "date": {"value": today.strftime('%Y年%m月%d日')},
   "week_day": {"value": get_week_day()},
-  "love_days":{"value":get_anniversary_day_count()},
-  "birthday_left":{"value":get_birthday()},
-  "sweet_words":{"value":get_sweet_words()},
-  "wit_words":{"value":get_wit_words()}
+  "love_days":{"value": get_anniversary_day_count()},
+  "birthday_left":{"value": get_birthday()},
+  "sweet_words":{"value": get_sweet_words()},
+  "wit_words":{"value": get_wit_words()}
 }
 
 # res = wm.send_template(user_id, template_id, data)
