@@ -52,13 +52,13 @@ def get_sweet_words():
   words = requests.get("https://api.shadiao.pro/chp")
   return words.json()['data']['text']
 
-# def get_wit_words():
-#   #   words = requests.get("https://api.shadiao.pro/du")
-#   #   if words.status_code != 200:
-#   #     return get_words()
-#   #   return words.json()['data']['text']
-#   words = requests.get("https://api.shadiao.pro/du")
-#   return words.json()['data']['text']
+def get_wit_words():
+  #   words = requests.get("https://api.shadiao.pro/du")
+  #   if words.status_code != 200:
+  #     return get_words()
+  #   return words.json()['data']['text']
+  words = requests.get("https://api.shadiao.pro/du")
+  return words.json()['data']['text']
 
 def get_random_color():
   return "#%06x" % random.randint(0, 0xFFFFFF)
@@ -75,7 +75,7 @@ data = {
   "love_days":{"value": get_anniversary_day_count()},
   "birthday_left":{"value": get_birthday()},
   "sweet_words":{"value": get_sweet_words()},
-#   "wit_words":{"value": get_wit_words()}
+  "wit_words":{"value": get_wit_words()}
 }
 
 # res = wm.send_template(user_id, template_id, data)
