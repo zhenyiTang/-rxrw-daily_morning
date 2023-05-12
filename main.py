@@ -57,7 +57,7 @@ def get_wit_words():
   #   if words.status_code != 200:
   #     return get_words()
   #   return words.json()['data']['text']
-  words = requests.get("https://du.shadiao.pro")
+  words = requests.get("https://api.shadiao.pro/du")
   return words.json()['data']['text']
 
 def get_random_color():
