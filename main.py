@@ -58,6 +58,7 @@ def get_wit_words():
   #     return get_words()
   #   return words.json()['data']['text']
   words = requests.get("https://du.shadiao.pro")
+  print(words.json)
   return words.json()['data']['text']
 
 def get_random_color():
@@ -75,7 +76,7 @@ data = {
   "love_days":{"value":get_anniversary_day_count()},
   "birthday_left":{"value":get_birthday()},
   "sweet_words":{"value":get_sweet_words()},
-  "wit_words":{"value":get_wit_words()},
+  "wit_words":{"value":get_wit_words()}
 }
 
 # res = wm.send_template(user_id, template_id, data)
