@@ -5,7 +5,6 @@ import random
 import requests
 from wechatpy import WeChatClient
 from wechatpy.client.api import WeChatMessage
-import threading
 
 app_id = os.environ["APP_ID"]
 app_secret = os.environ["APP_SECRET"]
@@ -63,13 +62,7 @@ if __name__ == '__main__':
     character_limit = 20
 
     sweet_words_parts = split_message(get_sweet_words(), character_limit)
+    send_multiple_messages(sweet_words_parts, "sweet_words")
+
     wit_words_parts = split_message(get_wit_words(), character_limit)
-
-    t1 = threading.Thread(target=send_multiple_messages, args=(sweet_words_parts, "sweet_words",))
-    t2 = threading.Thread(target=send_multiple_messages, args=(wit_words_parts, "wit_words",))
-
-    t1.start()
-    t2.start()
-
-    t1.join()
-    t2.join()
+    send_multiple_messages(wit_words_parts, "wit_words")
